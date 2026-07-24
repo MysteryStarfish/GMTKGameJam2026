@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fe7fd78dc0a4f16981003da0df0e04c, type: 3}
+  m_Name: Level1
+  m_EditorClassIdentifier: 
+  levelNumber: 0
+  levelName: 
+  activePotsAmount: 2
+  ingredients:
+  - {fileID: 7321394329614490032, guid: a84f95785be068b46812bd3d463aafba, type: 3}
+  - {fileID: 7321394329614490032, guid: a84f95785be068b46812bd3d463aafba, type: 3}

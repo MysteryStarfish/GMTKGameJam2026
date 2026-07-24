@@ -1,30 +1,46 @@
 ﻿using System;
+using Script.Core.Ingredients;
 using Script.Input;
+using Script.Tool.Cursors;
 using UnityEngine;
 
 namespace Script.Core
 {
     public class Player : MonoBehaviour
     {
-        public enum Stat
-        {
-            Idle,
-            Attack,
-            Charge,
-            Counter
-        }
         [SerializeField] PlayerInputReader inputReader;
-        public float chargeLevel;
-        public Stat stat { get; private set; }
-
-        void Awake()
-        {
-            inputReader.SwitchPutGetEvent += OnSwitchPutGet;
-        }
         
-        void OnSwitchPutGet()
+        private Ingredient _holdingIngredient;
+        CursorHandler cursorHandler;
+        public event Action<int> PotChosenEvent;
+        public event Action MagicEvent;
+        private void OnEnable()
         {
-            Debug.Log("OnSwitchPutGet");
+            if (inputReader == null) return;
+            inputReader.PotChosenEvent += HandlePotChosen;
+            inputReader.MagicEvent += OnMagic;
+        }
+
+        private void OnDisable()
+        {
+            if (inputReader == null) return;
+            inputReader.PotChosenEvent -= HandlePotChosen;
+            inputReader.MagicEvent -= OnMagic;
+        }
+
+        private void HandlePotChosen(int index)
+        {
+            PotChosenEvent?.Invoke(index);
+        }
+
+        public void SetCursorIngredient(Ingredient getIngredient)
+        {
+            _holdingIngredient = getIngredient;
+            cursorHandler.SetNewCursor(_holdingIngredient.Sprite.texture);
+        }
+        private void OnMagic()
+        {
+            MagicEvent?.Invoke();
         }
     }
 }

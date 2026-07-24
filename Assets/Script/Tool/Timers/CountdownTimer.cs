@@ -1,6 +1,6 @@
 using System;
 
-namespace MyGame.Core
+namespace Script.Tool.Timers
 {
     public abstract class Timer
     {

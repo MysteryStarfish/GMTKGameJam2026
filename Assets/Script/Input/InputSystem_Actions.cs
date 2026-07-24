@@ -93,9 +93,63 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             ""id"": ""df70fa95-8a34-4494-b137-73ab6b9c7d37"",
             ""actions"": [
                 {
-                    ""name"": ""SwitchPutGet"",
+                    ""name"": ""Pot1"",
                     ""type"": ""Button"",
                     ""id"": ""6c2ab1b8-8984-453a-af3d-a3c78ae1679a"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pot2"",
+                    ""type"": ""Button"",
+                    ""id"": ""2ba4f7a6-b3ed-42f3-8237-1d7422c978a4"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pot3"",
+                    ""type"": ""Button"",
+                    ""id"": ""ef39963a-a5d9-406f-b764-7897054a3644"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pot4"",
+                    ""type"": ""Button"",
+                    ""id"": ""48c43792-c7d9-4e1b-a084-99047932410b"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pot5"",
+                    ""type"": ""Button"",
+                    ""id"": ""7257bae8-2a17-4209-9ee7-571c47835b94"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pot6"",
+                    ""type"": ""Button"",
+                    ""id"": ""946a5134-940e-4539-8277-bec227e8d97a"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Magic"",
+                    ""type"": ""Button"",
+                    ""id"": ""b2c61223-2853-4333-9a24-e13642197838"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -105,12 +159,144 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             ""bindings"": [
                 {
                     ""name"": """",
-                    ""id"": ""fb099924-6a0c-4c23-9ddf-914f1610f296"",
-                    ""path"": ""<Keyboard>/shift"",
+                    ""id"": ""a03886bc-3e67-445c-9e3b-a24f8cc2ce14"",
+                    ""path"": ""<Keyboard>/s"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""SwitchPutGet"",
+                    ""action"": ""Pot1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""dda7bb61-d9f3-480f-a0c7-da4d557705ac"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pot1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7d3d7d3a-8208-476d-8285-6732172c06ba"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pot2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7a4692ca-c7f3-4a0f-8412-53139c1e5ddf"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pot2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""255dffdc-42a2-4750-bdd8-0bd4cb05e096"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pot3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6874defd-8849-4978-bb16-00fb5a764556"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pot3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""616a19df-e5b3-408f-8bc8-b7767fabe6b4"",
+                    ""path"": ""<Keyboard>/j"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pot4"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6f3e7a7b-55c8-4c56-b2a6-a11dbfb64c1a"",
+                    ""path"": ""<Keyboard>/4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pot4"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5483d5c0-2155-46fa-a066-522989e91fa7"",
+                    ""path"": ""<Keyboard>/k"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pot5"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3feaf163-b01b-4f75-9e81-38ad0b768c08"",
+                    ""path"": ""<Keyboard>/5"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pot5"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""07eb0338-dd40-4d5e-91d4-88021a82d071"",
+                    ""path"": ""<Keyboard>/l"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pot6"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""45283e92-648a-40c8-a470-670d82130b75"",
+                    ""path"": ""<Keyboard>/6"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pot6"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ae3bf75a-8da1-4449-a369-9f75e7e01071"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Magic"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -182,7 +368,13 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
 }");
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
-        m_Player_SwitchPutGet = m_Player.FindAction("SwitchPutGet", throwIfNotFound: true);
+        m_Player_Pot1 = m_Player.FindAction("Pot1", throwIfNotFound: true);
+        m_Player_Pot2 = m_Player.FindAction("Pot2", throwIfNotFound: true);
+        m_Player_Pot3 = m_Player.FindAction("Pot3", throwIfNotFound: true);
+        m_Player_Pot4 = m_Player.FindAction("Pot4", throwIfNotFound: true);
+        m_Player_Pot5 = m_Player.FindAction("Pot5", throwIfNotFound: true);
+        m_Player_Pot6 = m_Player.FindAction("Pot6", throwIfNotFound: true);
+        m_Player_Magic = m_Player.FindAction("Magic", throwIfNotFound: true);
     }
 
     ~@InputSystem_Actions()
@@ -263,7 +455,13 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     // Player
     private readonly InputActionMap m_Player;
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
-    private readonly InputAction m_Player_SwitchPutGet;
+    private readonly InputAction m_Player_Pot1;
+    private readonly InputAction m_Player_Pot2;
+    private readonly InputAction m_Player_Pot3;
+    private readonly InputAction m_Player_Pot4;
+    private readonly InputAction m_Player_Pot5;
+    private readonly InputAction m_Player_Pot6;
+    private readonly InputAction m_Player_Magic;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -276,9 +474,33 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// </summary>
         public PlayerActions(@InputSystem_Actions wrapper) { m_Wrapper = wrapper; }
         /// <summary>
-        /// Provides access to the underlying input action "Player/SwitchPutGet".
+        /// Provides access to the underlying input action "Player/Pot1".
         /// </summary>
-        public InputAction @SwitchPutGet => m_Wrapper.m_Player_SwitchPutGet;
+        public InputAction @Pot1 => m_Wrapper.m_Player_Pot1;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/Pot2".
+        /// </summary>
+        public InputAction @Pot2 => m_Wrapper.m_Player_Pot2;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/Pot3".
+        /// </summary>
+        public InputAction @Pot3 => m_Wrapper.m_Player_Pot3;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/Pot4".
+        /// </summary>
+        public InputAction @Pot4 => m_Wrapper.m_Player_Pot4;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/Pot5".
+        /// </summary>
+        public InputAction @Pot5 => m_Wrapper.m_Player_Pot5;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/Pot6".
+        /// </summary>
+        public InputAction @Pot6 => m_Wrapper.m_Player_Pot6;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/Magic".
+        /// </summary>
+        public InputAction @Magic => m_Wrapper.m_Player_Magic;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -305,9 +527,27 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_PlayerActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_PlayerActionsCallbackInterfaces.Add(instance);
-            @SwitchPutGet.started += instance.OnSwitchPutGet;
-            @SwitchPutGet.performed += instance.OnSwitchPutGet;
-            @SwitchPutGet.canceled += instance.OnSwitchPutGet;
+            @Pot1.started += instance.OnPot1;
+            @Pot1.performed += instance.OnPot1;
+            @Pot1.canceled += instance.OnPot1;
+            @Pot2.started += instance.OnPot2;
+            @Pot2.performed += instance.OnPot2;
+            @Pot2.canceled += instance.OnPot2;
+            @Pot3.started += instance.OnPot3;
+            @Pot3.performed += instance.OnPot3;
+            @Pot3.canceled += instance.OnPot3;
+            @Pot4.started += instance.OnPot4;
+            @Pot4.performed += instance.OnPot4;
+            @Pot4.canceled += instance.OnPot4;
+            @Pot5.started += instance.OnPot5;
+            @Pot5.performed += instance.OnPot5;
+            @Pot5.canceled += instance.OnPot5;
+            @Pot6.started += instance.OnPot6;
+            @Pot6.performed += instance.OnPot6;
+            @Pot6.canceled += instance.OnPot6;
+            @Magic.started += instance.OnMagic;
+            @Magic.performed += instance.OnMagic;
+            @Magic.canceled += instance.OnMagic;
         }
 
         /// <summary>
@@ -319,9 +559,27 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="PlayerActions" />
         private void UnregisterCallbacks(IPlayerActions instance)
         {
-            @SwitchPutGet.started -= instance.OnSwitchPutGet;
-            @SwitchPutGet.performed -= instance.OnSwitchPutGet;
-            @SwitchPutGet.canceled -= instance.OnSwitchPutGet;
+            @Pot1.started -= instance.OnPot1;
+            @Pot1.performed -= instance.OnPot1;
+            @Pot1.canceled -= instance.OnPot1;
+            @Pot2.started -= instance.OnPot2;
+            @Pot2.performed -= instance.OnPot2;
+            @Pot2.canceled -= instance.OnPot2;
+            @Pot3.started -= instance.OnPot3;
+            @Pot3.performed -= instance.OnPot3;
+            @Pot3.canceled -= instance.OnPot3;
+            @Pot4.started -= instance.OnPot4;
+            @Pot4.performed -= instance.OnPot4;
+            @Pot4.canceled -= instance.OnPot4;
+            @Pot5.started -= instance.OnPot5;
+            @Pot5.performed -= instance.OnPot5;
+            @Pot5.canceled -= instance.OnPot5;
+            @Pot6.started -= instance.OnPot6;
+            @Pot6.performed -= instance.OnPot6;
+            @Pot6.canceled -= instance.OnPot6;
+            @Magic.started -= instance.OnMagic;
+            @Magic.performed -= instance.OnMagic;
+            @Magic.canceled -= instance.OnMagic;
         }
 
         /// <summary>
@@ -428,11 +686,53 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     public interface IPlayerActions
     {
         /// <summary>
-        /// Method invoked when associated input action "SwitchPutGet" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Pot1" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnSwitchPutGet(InputAction.CallbackContext context);
+        void OnPot1(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Pot2" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPot2(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Pot3" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPot3(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Pot4" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPot4(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Pot5" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPot5(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Pot6" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPot6(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Magic" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMagic(InputAction.CallbackContext context);
     }
 }
