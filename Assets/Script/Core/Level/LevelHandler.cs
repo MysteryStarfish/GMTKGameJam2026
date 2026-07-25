@@ -13,11 +13,13 @@ namespace Script.Core
         [SerializeField] PotsHandler _potHandler;
         [SerializeField] IngredientsHandler _ingredientsHandler;
         [SerializeField] LevelClearAnimation _levelClearAnimation;
+        [SerializeField] BigPotAnimation _bigPotAnimation;
 
         private void Awake()
         {
             _ingredientsHandler.Setup(new List<Ingredient>(_levelData.ingredients), _levelData.activePotsAmount);
             _potHandler.SetUp(_levelData.activePotsAmount);
+            _bigPotAnimation.Setup(_levelData.ingredients);
         }
 
         private void OnEnable()

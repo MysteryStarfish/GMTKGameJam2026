@@ -3,21 +3,27 @@ using System.Collections.Generic;
 using Script.Core.Ingredients;
 using Script.Tool.Timers;
 using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 namespace Script.Core.Pots
 {
     public class Pot : MonoBehaviour
     {
         private int _currentExtraAmount;
+        [SerializeField] private Image potImage;
+        [SerializeField] private Image ingredientImage;
         [SerializeField] private int extraAmount;
+        [SerializeField] private PotAnimation potAnimation;
         
         private CountdownTimer _timer;
         private float _startTime;
-        private float _endTime; 
-        private float _duration;
+        public float Duration => Time.time - _startTime;
         
         private bool _isFinished;
         public bool IsFinished =>  _isFinished;
+        public bool IsStarted =>  _startTime > 0;
+        public float TargetTime => _ingredient?.time ?? 0;
         public PotType type;
         private Ingredient _ingredient;
 
@@ -49,6 +55,7 @@ namespace Script.Core.Pots
             if (_ingredient != null) throw new Exception("Already putting ingredient");
             _ingredient = ingredient;
             _timer.Reset(_ingredient.time);
+            potAnimation.PlayPutIngredientAnimation(_ingredient, ingredientImage, potImage);
             _timer.Start();
             _startTime = Time.time;
             Debug.Log("Put" + ingredient.name);
@@ -65,20 +72,29 @@ namespace Script.Core.Pots
 
         public Ingredient TakeIngredient()
         {
+            if (_isFinished) return null;
             if  (_ingredient == null) throw new Exception("Already taking ingredient");
             _isFinished = true;
             PotFinishedEvent?.Invoke();
-            _endTime = Time.time;
-            _duration = _endTime - _startTime;
-            _timer.Stop();
-            Debug.Log("Take" + _ingredient.name + " 偏差" + Math.Abs(_duration - _ingredient.time));
+            potAnimation.PlayTakeIngredientAnimation(_ingredient, ingredientImage, potImage, AfterTakeIngredient);
+            Debug.Log("Take" + _ingredient.name + " 偏差" + Math.Abs(Duration - _ingredient.time));
             _ingredient = null;
             return _ingredient;
         }
 
+        private void AfterTakeIngredient()
+        {
+            _timer.Stop();
+        }
+
         public void RemovePot()
         {
-            throw new NotImplementedException();
+            potImage.enabled = false;
+        }
+
+        public void Finish()
+        {
+            TakeIngredient();
         }
     }
 }
