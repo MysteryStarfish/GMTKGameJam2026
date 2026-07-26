@@ -1,4 +1,5 @@
-﻿using DG.Tweening;
+﻿using System;
+using DG.Tweening;
 using Script.Core.Ingredients;
 using Script.Tool.Timers;
 using TMPro;
@@ -7,6 +8,7 @@ using UnityEngine.UI;
 
 public class LevelClearAnimation : MonoBehaviour
 {
+    public event Action OnCountDownStartEvent;
     [SerializeField] private LayoutGroup tableLayoutGroup;
     
     [Header("桌子")]
@@ -130,6 +132,7 @@ public class LevelClearAnimation : MonoBehaviour
             _timer.Start();
             startTime = Time.time;
             if (countDownText != null) countDownText.gameObject.SetActive(true);
+            OnCountDownStartEvent?.Invoke();
         });
         // 動態結束時的回呼
         sequence.OnComplete(() => 
