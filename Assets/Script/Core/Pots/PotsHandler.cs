@@ -2,32 +2,48 @@
 using System.Collections.Generic;
 using System.Linq;
 using Script.Core.Ingredients;
+using Script.Core.Pots.PotTypes;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Script.Core.Pots
 {
     public class PotsHandler : MonoBehaviour
     {
+        private struct PotRuntimeState
+        {
+            public int CurrentUseMagicAmount;
+            public int MagicLimit;
+        }
         private int activePotsAmount;
         public event Action<int> PutIngredientEvent;
+        public event Action<int> TakeIngredientEvent;
         public event Action AllPotsFinishedEvent;
+        public event Action RunOutOfMagicPowerEvent;
+        public event Action UseMagicPowerEvent;
         [SerializeField] public Pot[] pots;
-        [SerializeField] public float acceptableRange;
+        [SerializeField] public float chainAcceptableRange;
+        [SerializeField] public float cookAcceptableRange;
         [SerializeField] private BigPotAnimation bigPotAnimation;
 
         public List<int> ActivePots;
         public bool AllPotsFinished => ActivePots.Count > 0 && ActivePots.All(idx => pots[idx].IsFinished);
 
+        private PotRuntimeState _state;
+        private int _currentUseMagicAmount => _state.CurrentUseMagicAmount;
+        private int magicLimit => _state.MagicLimit;
+        
         private bool IsActivePot(int idx)
         {
             return ActivePots.Contains(idx);
         }
-        public void SetUp(int amount)
+        public void SetUp(int amount, PotType[] pots, int magicLimit)
         {
             ActivePots = new List<int>();
+            _state.MagicLimit = magicLimit;
             SetActivePotsAmount(amount);
             
-            GeneratePots();
+            GeneratePots(pots);
         }
 
         private void SetActivePotsAmount(int amount)
@@ -35,24 +51,25 @@ namespace Script.Core.Pots
             activePotsAmount = amount;
         }
 
-        private void GeneratePots()
+        private void GeneratePots(PotType[] potTypes)
         {
             int mid = pots.Length / 2;
             int left = mid-1; int right = mid;
             foreach (var pot in pots)
             {
-                pot.gameObject.SetActive(false);
+                pot.gameObject.SetActive(true);
+                pot.RemovePot();
             }
 
             for (int i = 0; i < activePotsAmount; i+=2)
             {
-                pots[left].gameObject.SetActive(true);
+                pots[left].AddPot(potTypes[i]);
                 ActivePots.Add(left);
                 left--;
                 
-                pots[right].gameObject.SetActive(true);
-                if (i+1 >= activePotsAmount) pots[right].RemovePot();
-                else ActivePots.Add(right);
+                if (i+1 >= activePotsAmount) break;
+                pots[right].AddPot(potTypes[i+1]);
+                ActivePots.Add(right);
                 right++;
             }
         }
@@ -70,14 +87,22 @@ namespace Script.Core.Pots
             else pot.TakeIngredient();
         }
 
-        public void OnOnePotFinished()
+        public void OnOneTakeIngredient()
+        {
+            _state.CurrentUseMagicAmount++;
+            UseMagicPowerEvent?.Invoke();
+        }
+
+        public void AfterOneTakeIngredient()
         {
             foreach (var pot in pots)
             {
-                Debug.Log("pot IsStarted: " + pot.IsStarted + " Duration: " + pot.Duration + " TargetTime: "+ pot.TargetTime);
-                if (!(pot.IsStarted && Math.Abs(pot.Duration - pot.TargetTime) < acceptableRange)) continue;
+                // Debug.Log("pot IsStarted: " + pot.IsStarted + " Duration: " + pot.Duration + " TargetTime: "+ pot.TargetTime);
+                if (!(pot.IsStarted && Math.Abs(pot.Duration - pot.TargetTime) < chainAcceptableRange)) continue;
                 pot.Finish();
             }
+
+            if (!AllPotsFinished && _state.CurrentUseMagicAmount >= magicLimit) RunOutOfMagicPowerEvent?.Invoke();
             if (!AllPotsFinished) return;
             AllPotsFinishedEvent?.Invoke();
             bigPotAnimation.RandomizeIngredientPositions();

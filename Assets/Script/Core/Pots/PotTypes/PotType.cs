@@ -1,13 +1,16 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Serialization;
 
-namespace Script.Core.Pots.PotType
+namespace Script.Core.Pots.PotTypes
 {
-    public class PotType : ScriptableObject, IPotType
+    [CreateAssetMenu(fileName = "PotType", menuName = "ScriptableObjects/Pot")]
+    public class PotType : ScriptableObject
     {
         public Sprite potSprite;
-        public event Action OnCook;
-        public AudioClip SoundClip { get; set; }
+        public AnimationClip initAnimation;
+        public AnimationClip putIngredientAnimation;
+        public AnimationClip extraExecutionAnimation;
+        public AnimationClip takeIngredientAnimation;
+        public AudioClip soundClip;
     }
 }

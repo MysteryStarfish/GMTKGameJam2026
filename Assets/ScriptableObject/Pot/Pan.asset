@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5c1d48a56e44f19f18d01fd2879669, type: 3}
+  m_Name: Pan
+  m_EditorClassIdentifier: 
+  potSprite: {fileID: 21300000, guid: 43df61d7db6b11e45940fc1d25ceb4a0, type: 3}
+  initAnimation: {fileID: 7400000, guid: 3c669e220293a4e4797f776bfac446ac, type: 2}
+  putIngredientAnimation: {fileID: 7400000, guid: 6acdafb1764c02541b9af796d70f30d2, type: 2}
+  extraExecutionAnimation: {fileID: 0}
+  takeIngredientAnimation: {fileID: 7400000, guid: bbaa1c22172f989469bc3c21afdfa39e, type: 2}
+  soundClip: {fileID: 8300000, guid: 4b34b771ab5cb2a428a2ad807d25b5f6, type: 3}

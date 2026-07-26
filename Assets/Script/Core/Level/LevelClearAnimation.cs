@@ -11,10 +11,6 @@ public class LevelClearAnimation : MonoBehaviour
     public event Action OnCountDownStartEvent;
     [SerializeField] private LayoutGroup tableLayoutGroup;
     
-    [Header("桌子")]
-    [SerializeField] private RectTransform tableRect;
-    [SerializeField] private Vector2 tableTargetPos; // 例如 Y 移動到對齊底部的 Anchor Position
-    
     [Header("材料們")]
     [SerializeField] private RectTransform ingredients;
 
@@ -63,7 +59,7 @@ public class LevelClearAnimation : MonoBehaviour
         if (!dishRect) return;
 
         dishRect.gameObject.SetActive(true);
-        countDownText.text = "";
+        countDownText.text = "0";
     }
 
     public void JumpOutDish()
@@ -76,7 +72,7 @@ public class LevelClearAnimation : MonoBehaviour
     /// <summary>
     /// 觸發通關動畫
     /// </summary>
-    public void PlayClearSequence()
+    public void PlayClearSequence(Action callback)
     {
         if (tableLayoutGroup != null)
         {
@@ -90,7 +86,7 @@ public class LevelClearAnimation : MonoBehaviour
         // ----------------------------------------------------
         
         // 1. 桌子往下移
-        sequence.Append(tableRect.DOAnchorPos(tableTargetPos, 0.6f).SetEase(Ease.OutCubic));
+        // sequence.Append(tableRect.DOAnchorPos(tableTargetPos, 0.6f).SetEase(Ease.OutCubic));
 
         // 2. 左邊鍋子往左移出
         foreach (var pot in leftPots)
@@ -137,7 +133,7 @@ public class LevelClearAnimation : MonoBehaviour
         // 動態結束時的回呼
         sequence.OnComplete(() => 
         {
-            // Debug.Log("結局動畫播放完成！");
+            callback?.Invoke();
         });
     }
     private int _lastDisplayedSecond = -1;

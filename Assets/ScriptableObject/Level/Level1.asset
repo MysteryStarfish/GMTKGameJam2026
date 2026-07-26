@@ -7,14 +7,23 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5fe7fd78dc0a4f16981003da0df0e04c, type: 3}
   m_Name: Level1
   m_EditorClassIdentifier: 
   levelNumber: 0
   levelName: 
-  activePotsAmount: 2
+  magicUseAmount: 2
+  activePotsAmount: 4
   ingredients:
-  - {fileID: 7321394329614490032, guid: a84f95785be068b46812bd3d463aafba, type: 3}
-  - {fileID: 7321394329614490032, guid: a84f95785be068b46812bd3d463aafba, type: 3}
+  - {fileID: 7321394329614490032, guid: 54b443b9fc4be0d46896bb1c114fcab4, type: 3}
+  - {fileID: 7321394329614490032, guid: 2578f8d4f1d3abd4cb93aaf2a4e34be5, type: 3}
+  - {fileID: 7321394329614490032, guid: b0da04b11ff5f3241a2ee25c6af2fd8e, type: 3}
+  - {fileID: 7321394329614490032, guid: 0452d96c8a537614abc864199b581945, type: 3}
+  pots:
+  - {fileID: 11400000, guid: feffc16da6eccdd4c8cbea96aa60beb6, type: 2}
+  - {fileID: 11400000, guid: f55f31cef11dd584eaef002358f7a9ae, type: 2}
+  - {fileID: 11400000, guid: 7751c7949b5d80b4a867174d7cf54d7c, type: 2}
+  - {fileID: 11400000, guid: f55f31cef11dd584eaef002358f7a9ae, type: 2}
+  DishIcon: {fileID: 0}

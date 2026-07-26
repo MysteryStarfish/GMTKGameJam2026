@@ -22,6 +22,7 @@ namespace Script.Core.Ingredients
             if (image == null) return;
             image.sprite = ingredient != null ? ingredient.Sprite : null;
             image.enabled = ingredient != null;
+            image.SetNativeSize();
         }
 
         public void ClearSlot()

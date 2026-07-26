@@ -22,8 +22,8 @@ namespace Script.Core.Ingredients
             ActiveSlots = new List<int>();
             _ingredients = new List<Ingredient>();
             
-            SetIngredients(ingredients);
             SetActiveSlotsAmount(activePotsAmount);
+            SetIngredients(ingredients);
 
             GenerateSlots();
             RefreshIngredientSlots();
@@ -45,7 +45,8 @@ namespace Script.Core.Ingredients
             int left = mid-1; int right = mid;
             foreach (var slot in ingredientSlots)
             {
-                slot.gameObject.SetActive(false);
+                slot.gameObject.SetActive(true);
+                slot.ClearSlot();
             }
 
             for (int i = 0; i < activeSlotsAmount; i+=2)

@@ -1,44 +1,81 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections;
+using DG.Tweening;
 using Script.Core.Ingredients;
+using Script.Core.Pots.PotTypes;
 using Script.Tool.Timers;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Script.Core.Pots
 {
     public class Pot : MonoBehaviour
     {
-        private int _currentExtraAmount;
+        private struct PotRuntimeState
+        {
+            public Ingredient Ingredient;
+            public int CurrentExtraAmount;
+            public float StartTime;
+            public float EndTime;
+            public float TotalDelayTime;
+            public bool IsFinished;
+        }
         [SerializeField] private Image potImage;
         [SerializeField] private Image ingredientImage;
-        [SerializeField] private int extraAmount;
-        [SerializeField] private PotAnimation potAnimation;
+        [SerializeField] public PotType potType;
+        [SerializeField] private Animator _animator;
+        private int extraAmount => _ingredient?.ExtraExecutionTime ?? 0;
         
+        private PotRuntimeState _state;
         private CountdownTimer _timer;
-        private float _startTime;
-        public float Duration => Time.time - _startTime;
+        private float _startTime => _state.StartTime;
+        private float _endTime => _state.EndTime;
+        public float Duration => _isFinished ? _endTime - _startTime : Time.time - _startTime;
         
-        private bool _isFinished;
-        public bool IsFinished =>  _isFinished;
-        public bool IsStarted =>  _startTime > 0;
-        public float TargetTime => _ingredient?.time ?? 0;
-        public PotType type;
-        private Ingredient _ingredient;
+        private bool _isFinished => _state.IsFinished;
+        public bool IsStarted => _startTime > 0;
+        public bool IsFinished => _isFinished;
+        public float TargetTime => _ingredient?.CookTime ?? 0;
+        private Ingredient _ingredient => _state.Ingredient;
+        private int _currentExtraAmount =>  _state.CurrentExtraAmount;
+        private float CookTime => _ingredient?.CookTime ?? 0;
+        public float TotalDelayTime => _state.TotalDelayTime;
 
         public event Action PotChosenEvent;
-        public event Action PotFinishedEvent;
+        public event Action PutIngredientEvent;
+        public event Action ExtraExecutionEvent;
+        public event Action TakeIngredientEvent;
+        public event Action<Ingredient> SaveIngredientEvent;
+        public event Action AfterTakeIngredientEvent;
 
         private void Awake()
         {
-            _timer = new CountdownTimer(10);
-            _currentExtraAmount = 0;
+            Setup();
+        }
+
+        private void OnEnable()
+        {
+            PutIngredientEvent += OnPutIngredient;
+            ExtraExecutionEvent += OnExtraExecution;
+            TakeIngredientEvent += OnTakeIngredient;
+        }
+
+        private void OnDisable()
+        {
+            PutIngredientEvent -= OnPutIngredient;
+            ExtraExecutionEvent -= OnExtraExecution;
+            TakeIngredientEvent -= OnTakeIngredient;
+        }
+
+        private void Setup()
+        {
+            _timer = new CountdownTimer(0);
+            _state.CurrentExtraAmount = 0;
         }
 
         private void FixedUpdate()
         {
-            _timer.Tick(Time.deltaTime);
+            if (_timer is { IsRunning: true }) _timer.Tick(Time.deltaTime);
         }
         
         public void OnPotChosen()
@@ -53,38 +90,71 @@ namespace Script.Core.Pots
         public void PutIngredient(Ingredient ingredient)
         {
             if (_ingredient != null) throw new Exception("Already putting ingredient");
-            _ingredient = ingredient;
-            _timer.Reset(_ingredient.time);
-            potAnimation.PlayPutIngredientAnimation(_ingredient, ingredientImage, potImage);
+            if (_isFinished) return;
+            SetupIngredient(ingredient);
+            PutIngredientEvent?.Invoke();
+            PotCountDownStart();
+            // Debug.Log("Put" + ingredient.name);
+        }
+
+        private void PotCountDownStart()
+        {
             _timer.Start();
-            _startTime = Time.time;
-            Debug.Log("Put" + ingredient.name);
+            _state.StartTime = Time.time;
+        }
+
+        private void SetupIngredient(Ingredient ingredient)
+        {
+            _state.Ingredient = ingredient;
+            _timer.Reset(_ingredient.CookTime);
         }
 
         public void DoExtraAction()
         {
             if (IsSatisfied()) throw new Exception("Already satisfied condition");
-            _currentExtraAmount++;
-            Debug.Log("DoExtraAction");
+            _state.CurrentExtraAmount++;
+            ExtraExecutionEvent?.Invoke();
+            _state.TotalDelayTime += Mathf.Abs(Duration - CookTime / (extraAmount + 1) * (_state.CurrentExtraAmount + 1));
+            // Debug.Log("DoExtraAction");
         }
         
         public bool IsSatisfied() => _currentExtraAmount >= extraAmount;
 
-        public Ingredient TakeIngredient()
+        public void TakeIngredient()
         {
-            if (_isFinished) return null;
+            if (_isFinished) return;
             if  (_ingredient == null) throw new Exception("Already taking ingredient");
-            _isFinished = true;
-            PotFinishedEvent?.Invoke();
-            potAnimation.PlayTakeIngredientAnimation(_ingredient, ingredientImage, potImage, AfterTakeIngredient);
-            Debug.Log("Take" + _ingredient.name + " 偏差" + Math.Abs(Duration - _ingredient.time));
-            _ingredient = null;
-            return _ingredient;
+            _state.IsFinished = true;
+            PotCountDownStop();
+            _state.TotalDelayTime += Math.Abs(Duration - _ingredient.CookTime);
+            Debug.Log("Take" + _ingredient.name + " 偏差" + Math.Abs(Duration - _ingredient.CookTime));
+            StartCoroutine(Co_TakeIngredientProcess());
         }
 
-        private void AfterTakeIngredient()
+        private void PotCountDownStop()
         {
             _timer.Stop();
+            _state.EndTime = Time.time;
+        }
+        
+        
+
+        // ReSharper disable Unity.PerformanceAnalysis
+        private IEnumerator Co_TakeIngredientProcess()
+        {
+            AnimationClip clip = potType.takeIngredientAnimation;
+            PlayTakeIngredientAnimation();
+            ShowIngredient();
+            TakeIngredientEvent?.Invoke();
+            SaveIngredientEvent?.Invoke(_ingredient);
+
+            if (clip)
+            {
+                yield return new WaitForSeconds(clip.length + 1);
+            }
+            Debug.Log(clip.name);
+            AfterTakeIngredientEvent?.Invoke();
+            _state.Ingredient = null;
         }
 
         public void RemovePot()
@@ -95,6 +165,92 @@ namespace Script.Core.Pots
         public void Finish()
         {
             TakeIngredient();
+        }
+        
+        public void Reset()
+        {
+            _state = default;
+            _timer.Stop();
+            potImage.enabled = true;  
+            ingredientImage.sprite = null;  
+        }
+
+        public void AddPot(PotType potType)
+        {
+            this.potType = potType;
+            potImage.sprite = potType.potSprite;
+            potImage.enabled = true;
+            PlayInitAnimation();
+        }
+        
+        private void OnPutIngredient()
+        {
+            PlayPutIngredientAnimation();
+        }
+
+        private void OnExtraExecution()
+        {
+            PlayPutIngredientAnimation();
+        }
+
+        private void OnTakeIngredient()
+        {
+            // ShowIngredient();
+        }
+
+        public void PlayInitAnimation()
+        {
+            PlayClip(potType.initAnimation);
+        }
+
+        public void PlayPutIngredientAnimation()
+        {
+            Debug.Log("PlayPutIngredientAnimation");
+            PlayClip(potType.putIngredientAnimation);
+        }
+
+        public void PlayExtraExecutionAnimation()
+        {
+            PlayClip(potType.extraExecutionAnimation);
+        }
+
+        public void PlayTakeIngredientAnimation()
+        {
+            PlayClip(potType.takeIngredientAnimation);
+        }
+        
+        private void PlayClip(AnimationClip clip)
+        {
+            _animator.Play(clip.name);
+        }
+
+        private void ShowIngredient()
+        {
+            _ingredient.ResultSprite = Math.Abs(Duration - _ingredient.CookTime) < 0.5f ? _ingredient.CookedGoodSprite : _ingredient.CookedBadSprite;
+            ingredientImage.sprite = _ingredient.ResultSprite;
+            ingredientImage.gameObject.SetActive(true);
+            ingredientImage.enabled = true;
+            FadeInOut(ingredientImage, 0.5f);
+        }
+        
+        public void FadeIn(Image targetImage, float fadeDuration)
+        {
+            targetImage.DOFade(1f, fadeDuration);
+        }
+
+        public void FadeOut(Image targetImage, float fadeDuration)
+        {
+            targetImage.DOFade(0f, fadeDuration);
+        }
+        
+        public void FadeInOut(Image targetImage, float fadeDuration)
+        {
+            ingredientImage.DOKill();
+
+            Sequence seq = DOTween.Sequence();
+            seq.Append(ingredientImage.DOFade(1f, 0.3f).From(0f));
+            seq.AppendInterval(0.4f); 
+            seq.Append(ingredientImage.DOFade(0f, 0.3f));
         }
     }
 }

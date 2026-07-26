@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5c1d48a56e44f19f18d01fd2879669, type: 3}
+  m_Name: LittlePot
+  m_EditorClassIdentifier: 
+  potSprite: {fileID: 21300000, guid: 43df61d7db6b11e45940fc1d25ceb4a0, type: 3}
+  initAnimation: {fileID: 7400000, guid: 5f246bdeb87f5cb4a81a14fcf27e7a9a, type: 2}
+  putIngredientAnimation: {fileID: 7400000, guid: a5720ee96fb6a1a4d818e57fc4643ebe, type: 2}
+  extraExecutionAnimation: {fileID: 0}
+  takeIngredientAnimation: {fileID: 7400000, guid: 05c39712b8c24274fb2d0184f589de9a, type: 2}
+  soundClip: {fileID: 8300000, guid: 64b1290e5a2adec4c9b60e9d0801b51c, type: 3}

@@ -1,5 +1,19 @@
 {
   "dependencies": {
+    "com.pedev.unity-discord-webhook": {
+      "version": "https://github.com/qwe321qwe321qwe321/Unity-DiscordWebhook.git?path=src/DiscordWebhook/Assets/DiscordWebhook",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "870763e50ff745f3e2b3b3081801044d85dda202"
+    },
+    "com.pedev.unity-replay-integration": {
+      "version": "https://github.com/qwe321qwe321qwe321/unity-media-collecting-solution.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "bba244702a033a64c840328b677fdedb7591a33c"
+    },
     "com.unity.2d.animation": {
       "version": "10.2.2",
       "depth": 1,
@@ -301,6 +315,94 @@
         "com.unity.modules.jsonserialize": "1.0.0"
       },
       "url": "https://packages.unity.com"
+    },
+    "jp.co.cyberagent.instant-replay": {
+      "version": "https://github.com/CyberAgentGameEntertainment/InstantReplay.git?path=Packages/jp.co.cyberagent.instant-replay#release",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "7a0d8c141f694cfef2ab6a8cfc519355818fcd88"
+    },
+    "jp.co.cyberagent.instant-replay.dependencies": {
+      "version": "https://github.com/CyberAgentGameEntertainment/InstantReplay.git?path=/Packages/jp.co.cyberagent.instant-replay.dependencies#release",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "org.nuget.system.io.pipelines": "9.0.3",
+        "org.nuget.system.threading.channels": "9.0.2"
+      },
+      "hash": "7a0d8c141f694cfef2ab6a8cfc519355818fcd88"
+    },
+    "org.nuget.microsoft.bcl.asyncinterfaces": {
+      "version": "9.0.2",
+      "depth": 2,
+      "source": "registry",
+      "dependencies": {
+        "org.nuget.system.threading.tasks.extensions": "4.5.4"
+      },
+      "url": "https://unitynuget-registry.openupm.com"
+    },
+    "org.nuget.system.buffers": {
+      "version": "4.5.1",
+      "depth": 2,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://unitynuget-registry.openupm.com"
+    },
+    "org.nuget.system.io.pipelines": {
+      "version": "9.0.3",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "org.nuget.system.buffers": "4.5.1",
+        "org.nuget.system.memory": "4.5.5",
+        "org.nuget.system.threading.tasks.extensions": "4.5.4"
+      },
+      "url": "https://unitynuget-registry.openupm.com"
+    },
+    "org.nuget.system.memory": {
+      "version": "4.5.5",
+      "depth": 2,
+      "source": "registry",
+      "dependencies": {
+        "org.nuget.system.buffers": "4.5.1",
+        "org.nuget.system.numerics.vectors": "4.4.0",
+        "org.nuget.system.runtime.compilerservices.unsafe": "4.5.3"
+      },
+      "url": "https://unitynuget-registry.openupm.com"
+    },
+    "org.nuget.system.numerics.vectors": {
+      "version": "4.4.0",
+      "depth": 3,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://unitynuget-registry.openupm.com"
+    },
+    "org.nuget.system.runtime.compilerservices.unsafe": {
+      "version": "4.5.3",
+      "depth": 3,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://unitynuget-registry.openupm.com"
+    },
+    "org.nuget.system.threading.channels": {
+      "version": "9.0.2",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "org.nuget.microsoft.bcl.asyncinterfaces": "9.0.2",
+        "org.nuget.system.threading.tasks.extensions": "4.5.4"
+      },
+      "url": "https://unitynuget-registry.openupm.com"
+    },
+    "org.nuget.system.threading.tasks.extensions": {
+      "version": "4.5.4",
+      "depth": 2,
+      "source": "registry",
+      "dependencies": {
+        "org.nuget.system.runtime.compilerservices.unsafe": "4.5.3"
+      },
+      "url": "https://unitynuget-registry.openupm.com"
     },
     "com.unity.modules.accessibility": {
       "version": "1.0.0",

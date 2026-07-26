@@ -22,6 +22,16 @@ namespace Script.Core.Pots
         {
             this.ingredients = ingredients; 
         }
+
+        public void Reset()
+        {
+            for (int i = 0; i < ingredientRects.Length; i++)
+            {
+                var image = ingredientRects[i];
+                image.sprite = null;
+                image.gameObject.SetActive(false);
+            }
+        }
         /// <summary>
         /// 將所有食材隨機散落在鍋子內
         /// </summary>
