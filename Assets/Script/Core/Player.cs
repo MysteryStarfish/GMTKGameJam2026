@@ -40,7 +40,7 @@ namespace Script.Core
             inputReader.MagicEvent -= OnMagic;
         }
 
-        private void HandlePotChosen(int index)
+        public void HandlePotChosen(int index)
         {
             if (GameState.Instance.IsFinished)
             {

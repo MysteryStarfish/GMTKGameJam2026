@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5c1d48a56e44f19f18d01fd2879669, type: 3}
+  m_Name: Restart
+  m_EditorClassIdentifier: 
+  potSprite: {fileID: 3107320336309930209, guid: aaf0e91b7f05d8e4dbc2307bc70fabfc, type: 3}
+  initAnimation: {fileID: 7400000, guid: 3adb3d346f02c184c8bc30dff5ca7ea1, type: 2}
+  putIngredientAnimation: {fileID: 7400000, guid: 68a568c833d5040438207f4ed0eafbb4, type: 2}
+  extraExecutionAnimation: {fileID: 7400000, guid: 3adb3d346f02c184c8bc30dff5ca7ea1, type: 2}
+  takeIngredientAnimation: {fileID: 7400000, guid: 68a568c833d5040438207f4ed0eafbb4, type: 2}
+  soundClip: {fileID: 0}

@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using DG.Tweening;
 using Script.Core.Audio;
 using Script.Core.Crystals;
 using Script.Core.Ingredients;
 using Script.Core.Pots;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 namespace Script.Core
 {
@@ -22,6 +20,8 @@ namespace Script.Core
         [SerializeField] GoodEndSceneController _goodEndSceneController;
         [SerializeField] BadEndSceneController _badEndSceneController;
         [SerializeField] AudioHandler _audioHandler;
+        [SerializeField] RestartAndHomeHandler _restartAndHomeHandler;
+        [SerializeField] Image TransitionBackground;
         
         private List<Ingredient> Results;
         
@@ -34,11 +34,15 @@ namespace Script.Core
 
         private void LoadLevel(int idx)
         {
-            var levelData = _levelData[idx];
-            _ingredientsHandler.Setup(new List<Ingredient>(levelData.ingredients), levelData.activePotsAmount);
-            _potHandler.SetUp(levelData.activePotsAmount, levelData.pots, levelData.magicUseAmount);
-            _audioHandler.SetUp();
-            _crystalHandler.ActiveCrystal(levelData.magicUseAmount);
+            TransitionBackground.DOColor(new Color(0, 0, 0, 0), 0.3f);
+            DOVirtual.DelayedCall(0.3f, () =>
+            {
+                var levelData = _levelData[idx];
+                _ingredientsHandler.Setup(new List<Ingredient>(levelData.ingredients), levelData.activePotsAmount);
+                _potHandler.SetUp(levelData.activePotsAmount, levelData.pots, levelData.magicUseAmount);
+                _audioHandler.SetUp();
+                _crystalHandler.ActiveCrystal(levelData.magicUseAmount);
+            });
         }
 
         private void OnEnable()
@@ -73,17 +77,12 @@ namespace Script.Core
         {
             if (obj <= 2)
             {
-                RestartLevel();
+                _restartAndHomeHandler.Home();
             }
             else 
             {
-                SwitchToHomePage();
+                _restartAndHomeHandler.Restart();
             }
-        }
-
-        private void SwitchToHomePage()
-        {
-            throw new NotImplementedException();
         }
 
         private void OnRunOutOfMagicPower()
@@ -134,17 +133,6 @@ namespace Script.Core
             _goodEndSceneController.Show();
         }
 
-        public void RestartLevel()
-        {
-            DOTween.KillAll();
-
-            Time.timeScale = 1f;
-
-            GameState.Instance.Reset();
-
-            int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-            SceneManager.LoadScene(currentSceneIndex);
         
-        }
     }
 }
