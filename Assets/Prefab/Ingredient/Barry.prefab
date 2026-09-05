@@ -49,4 +49,5 @@ MonoBehaviour:
   _cookedBadSprite: {fileID: 21300000, guid: ec60e7b68c3e9fe42883d4594218351d, type: 3}
   _cookTime: 5
   _extraExcutionTime: 0
+  IsCookedGood: 0
   potType: {fileID: 0}

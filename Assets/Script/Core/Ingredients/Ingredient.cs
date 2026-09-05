@@ -1,9 +1,10 @@
 ﻿using Script.Core.Pots.PotTypes;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Script.Core.Ingredients
 {
-    public class Ingredient : MonoBehaviour
+    public class Ingredient : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         [SerializeField] private Sprite _sprite;
         [SerializeField] private Sprite _cookedGoodSprite;
@@ -19,5 +20,14 @@ namespace Script.Core.Ingredients
         public Sprite CookedBadSprite => _cookedBadSprite;
         public float CookTime => _cookTime;
         public int ExtraExecutionTime => _extraExcutionTime;
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
