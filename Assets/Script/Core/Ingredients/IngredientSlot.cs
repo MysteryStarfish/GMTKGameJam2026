@@ -1,6 +1,4 @@
-﻿using System;
-using UnityEngine;
-using UnityEngine.Serialization;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace Script.Core.Ingredients
@@ -9,6 +7,8 @@ namespace Script.Core.Ingredients
     {
         [SerializeField] private Image image;
         [SerializeField] private Ingredient ingredient;
+        
+        public RectTransform RectTransform => transform as RectTransform;
 
         public Ingredient GetIngredient()
         {
@@ -24,6 +24,13 @@ namespace Script.Core.Ingredients
             image.enabled = ingredient != null;
             image.SetNativeSize();
         }
+        
+        public void ClearSlotImage()
+        {
+            if (image == null) return;
+            image.sprite = null;
+            image.enabled = false;
+        }
 
         public void ClearSlot()
         {
@@ -32,6 +39,12 @@ namespace Script.Core.Ingredients
             if (image == null) return;
             image.sprite = null;
             image.enabled = false;
+        }
+
+        public void SetCookedImage()
+        {
+            image.sprite = ingredient.ResultSprite;
+            image.enabled = true;
         }
     }
 }

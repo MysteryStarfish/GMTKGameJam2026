@@ -24,7 +24,6 @@ namespace Script.Core.Pots
         [SerializeField] public Pot[] pots;
         [SerializeField] public float chainAcceptableRange;
         [SerializeField] public float cookAcceptableRange;
-        [SerializeField] private BigPotAnimation bigPotAnimation;
 
         public List<int> ActivePots;
         public bool AllPotsFinished => ActivePots.Count > 0 && ActivePots.All(idx => pots[idx].IsFinished);
@@ -32,10 +31,16 @@ namespace Script.Core.Pots
         private PotRuntimeState _state;
         private int _currentUseMagicAmount => _state.CurrentUseMagicAmount;
         private int magicLimit => _state.MagicLimit;
+        private bool _hasFiredAllFinished = false; // 新增這行
         
         private bool IsActivePot(int idx)
         {
             return ActivePots.Contains(idx);
+        }
+
+        private int PotIndex(Pot pot)
+        {
+            return pots.ToList().IndexOf(pot);
         }
         public void SetUp(int amount, PotType[] pots, int magicLimit)
         {
@@ -78,16 +83,32 @@ namespace Script.Core.Pots
         {
             if (!IsActivePot(potIdx)) return;
             Pot pot = pots[potIdx];
+            if (pot.IsFinished) return;
             if (pot.IsEmpty())
             {
                 PutIngredientEvent?.Invoke(potIdx);
                 pot.PutIngredient(ingredient);
             }
             else if (!pot.IsSatisfied()) pot.DoExtraAction();
-            else pot.TakeIngredient();
+            else
+            {
+                pot.TakeIngredient();
+                TakeIngredientEvent?.Invoke(potIdx);
+            }
         }
 
         public void OnOneTakeIngredient()
+        {
+            foreach (var pot in pots)
+            {
+                Debug.Log("pot IsStarted: " + pot.IsStarted + " Duration: " + pot.Duration + " TargetTime: "+ pot.TargetTime);
+                if (!(pot.IsStarted && Math.Abs(pot.Duration - pot.TargetTime) < chainAcceptableRange)) continue;
+                pot.ChainFinish();
+                TakeIngredientEvent?.Invoke(PotIndex(pot));
+            }
+        }
+
+        public void OnUseMana()
         {
             _state.CurrentUseMagicAmount++;
             UseMagicPowerEvent?.Invoke();
@@ -95,17 +116,11 @@ namespace Script.Core.Pots
 
         public void AfterOneTakeIngredient()
         {
-            foreach (var pot in pots)
-            {
-                // Debug.Log("pot IsStarted: " + pot.IsStarted + " Duration: " + pot.Duration + " TargetTime: "+ pot.TargetTime);
-                if (!(pot.IsStarted && Math.Abs(pot.Duration - pot.TargetTime) < chainAcceptableRange)) continue;
-                pot.Finish();
-            }
-
             if (!AllPotsFinished && _state.CurrentUseMagicAmount >= magicLimit) RunOutOfMagicPowerEvent?.Invoke();
             if (!AllPotsFinished) return;
+            if (_hasFiredAllFinished) return;
             AllPotsFinishedEvent?.Invoke();
-            bigPotAnimation.RandomizeIngredientPositions();
+            _hasFiredAllFinished = true;
         }
     }
 }

@@ -7,6 +7,7 @@ using Script.Core.Ingredients;
 using Script.Core.Pots;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 namespace Script.Core
 {
@@ -18,8 +19,8 @@ namespace Script.Core
         [SerializeField] IngredientsHandler _ingredientsHandler;
         [SerializeField] CrystalHandler _crystalHandler;
         [SerializeField] LevelClearAnimation _levelClearAnimation;
-        [SerializeField] BigPotAnimation _bigPotAnimation;
-        [SerializeField] CookingEntranceAnimation _cookingEntranceAnimation;
+        [SerializeField] GoodEndSceneController _goodEndSceneController;
+        [SerializeField] BadEndSceneController _badEndSceneController;
         [SerializeField] AudioHandler _audioHandler;
         
         private List<Ingredient> Results;
@@ -36,10 +37,8 @@ namespace Script.Core
             var levelData = _levelData[idx];
             _ingredientsHandler.Setup(new List<Ingredient>(levelData.ingredients), levelData.activePotsAmount);
             _potHandler.SetUp(levelData.activePotsAmount, levelData.pots, levelData.magicUseAmount);
-            _bigPotAnimation.Setup(levelData.ingredients);
             _audioHandler.SetUp();
             _crystalHandler.ActiveCrystal(levelData.magicUseAmount);
-            _cookingEntranceAnimation.SetIngredientSprites(Results);
         }
 
         private void OnEnable()
@@ -48,6 +47,8 @@ namespace Script.Core
             _potHandler.UseMagicPowerEvent += OnMagic;
             _player.MagicEvent += OnFinalMagic;
             _levelClearAnimation.OnCountDownStartEvent += _audioHandler.PlayMagicBGM;
+            _crystalHandler.RunOutOfMagicPower += OnRunOutOfMagicPower;
+            _player.BadEndChosenEvent += OnBadEndChosen;
             for (int i = 0; i < _potHandler.pots.Length; i++)
             {
                 _potHandler.pots[i].SaveIngredientEvent += OnGetResult;
@@ -60,15 +61,47 @@ namespace Script.Core
             _potHandler.UseMagicPowerEvent -= OnMagic;
             _player.MagicEvent -= OnFinalMagic;
             _levelClearAnimation.OnCountDownStartEvent -= _audioHandler.PlayMagicBGM;
+            _crystalHandler.RunOutOfMagicPower -= OnRunOutOfMagicPower;
+            _player.BadEndChosenEvent -= OnBadEndChosen;
             for (int i = 0; i < _potHandler.pots.Length; i++)
             {
                 _potHandler.pots[i].SaveIngredientEvent -= OnGetResult;
             }
         }
 
+        private void OnBadEndChosen(int obj)
+        {
+            if (obj <= 2)
+            {
+                RestartLevel();
+            }
+            else 
+            {
+                SwitchToHomePage();
+            }
+        }
+
+        private void SwitchToHomePage()
+        {
+            throw new NotImplementedException();
+        }
+
         private void OnRunOutOfMagicPower()
         {
-            
+            if (_potHandler.AllPotsFinished) return;
+            SwitchToBadEnd();
+            _audioHandler.PlayBadEndBGM();
+        }
+
+        private void SwitchToBadEnd()
+        {
+            WhenEnding();
+            _badEndSceneController.Show();
+        }
+
+        private void WhenEnding()
+        {
+            GameState.Instance.Finish();
         }
 
         private void OnGetResult(Ingredient ingredient)
@@ -77,7 +110,7 @@ namespace Script.Core
         }
         private void OnAllPotsFinished()
         {
-            _levelClearAnimation.PlayClearSequence(() => LoadLevel(1));        
+            _levelClearAnimation.PlayClearSequence();        
         }
         
         private void OnMagic()
@@ -87,17 +120,27 @@ namespace Script.Core
         
         private void OnFinalMagic()
         {
+            if (GameState.Instance.IsFinished) return;
             float duration = Time.time - _levelClearAnimation.startTime;
             float del = Mathf.Abs(5f - duration);
-            Debug.Log("偏差" + del);
-            _levelClearAnimation.JumpOutDish();
+            Debug.Log("偏差" + (5f - duration));
+            SwitchToGoodEndScene();
+            _audioHandler.PlayGoodEndBGM();
         }
-        
+
+        private void SwitchToGoodEndScene()
+        {
+            WhenEnding();
+            _goodEndSceneController.Show();
+        }
+
         public void RestartLevel()
         {
             DOTween.KillAll();
 
             Time.timeScale = 1f;
+
+            GameState.Instance.Reset();
 
             int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
             SceneManager.LoadScene(currentSceneIndex);

@@ -1,7 +1,5 @@
 ﻿using Script.Core.Pots.PotTypes;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
 
 namespace Script.Core.Ingredients
 {
@@ -12,7 +10,8 @@ namespace Script.Core.Ingredients
         [SerializeField] private Sprite _cookedBadSprite;
         [SerializeField] private float _cookTime;
         [SerializeField] private int _extraExcutionTime;
-        public Sprite ResultSprite;
+        public bool IsCookedGood;
+        public Sprite ResultSprite => IsCookedGood ? _cookedGoodSprite : _cookedBadSprite;
         public PotType potType;
 
         public Sprite Sprite => _sprite;

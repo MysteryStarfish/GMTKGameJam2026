@@ -16,15 +16,5 @@ namespace Script.Core
         public Ingredient[] ingredients;
         public PotType[] pots;
         public Sprite DishIcon;
-
-        // public void Setup()
-        // {
-        //     int index = 0;
-        //     foreach (var ingredient in ingredients)
-        //     {
-        //         pots[index] = ingredient.potType;
-        //         index++;
-        //     }
-        // }
     }
 }

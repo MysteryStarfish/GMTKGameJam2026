@@ -1,10 +1,14 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Script.Core.Crystals
 {
     public class CrystalHandler : MonoBehaviour
     {
         [SerializeField] private Crystal[] crystals;
+        
+        public event Action RunOutOfMagicPower;
+        
         private int maxMagicPower;
         private int currentMagicPower;
         
@@ -24,9 +28,10 @@ namespace Script.Core.Crystals
 
         public void TurnOffCrystal()
         {
-            if (currentMagicPower >= maxMagicPower)  return;
+            if (currentMagicPower <= 0) return;
             crystals[currentMagicPower - 1].TurnOff();
             currentMagicPower--;
+            if (currentMagicPower <= 0) RunOutOfMagicPower?.Invoke();
         }
     }
 }

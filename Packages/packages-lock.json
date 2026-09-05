@@ -7,13 +7,6 @@
       "dependencies": {},
       "hash": "870763e50ff745f3e2b3b3081801044d85dda202"
     },
-    "com.pedev.unity-replay-integration": {
-      "version": "https://github.com/qwe321qwe321qwe321/unity-media-collecting-solution.git",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "bba244702a033a64c840328b677fdedb7591a33c"
-    },
     "com.unity.2d.animation": {
       "version": "10.2.2",
       "depth": 1,
@@ -106,6 +99,15 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.unity.bindings.openimageio": {
+      "version": "1.0.2",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.collections": "1.2.4"
+      },
+      "url": "https://packages.unity.com"
+    },
     "com.unity.burst": {
       "version": "1.8.29",
       "depth": 2,
@@ -125,7 +127,7 @@
     },
     "com.unity.collections": {
       "version": "2.6.5",
-      "depth": 2,
+      "depth": 1,
       "source": "registry",
       "dependencies": {
         "com.unity.burst": "1.8.27",
@@ -201,9 +203,20 @@
     },
     "com.unity.nuget.mono-cecil": {
       "version": "1.11.6",
-      "depth": 3,
+      "depth": 2,
       "source": "registry",
       "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.recorder": {
+      "version": "5.1.6",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.timeline": "1.8.7",
+        "com.unity.collections": "1.2.4",
+        "com.unity.bindings.openimageio": "1.0.2"
+      },
       "url": "https://packages.unity.com"
     },
     "com.unity.render-pipelines.core": {
@@ -277,7 +290,7 @@
     },
     "com.unity.test-framework.performance": {
       "version": "3.4.0",
-      "depth": 3,
+      "depth": 2,
       "source": "registry",
       "dependencies": {
         "com.unity.test-framework": "1.1.33",
@@ -315,13 +328,6 @@
         "com.unity.modules.jsonserialize": "1.0.0"
       },
       "url": "https://packages.unity.com"
-    },
-    "jp.co.cyberagent.instant-replay": {
-      "version": "https://github.com/CyberAgentGameEntertainment/InstantReplay.git?path=Packages/jp.co.cyberagent.instant-replay#release",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "7a0d8c141f694cfef2ab6a8cfc519355818fcd88"
     },
     "jp.co.cyberagent.instant-replay.dependencies": {
       "version": "https://github.com/CyberAgentGameEntertainment/InstantReplay.git?path=/Packages/jp.co.cyberagent.instant-replay.dependencies#release",

@@ -45,6 +45,7 @@ namespace Script.Core.Pots
         public event Action PutIngredientEvent;
         public event Action ExtraExecutionEvent;
         public event Action TakeIngredientEvent;
+        public event Action UseManaEvent;
         public event Action<Ingredient> SaveIngredientEvent;
         public event Action AfterTakeIngredientEvent;
 
@@ -120,6 +121,17 @@ namespace Script.Core.Pots
         
         public bool IsSatisfied() => _currentExtraAmount >= extraAmount;
 
+        public void ChainTakeIngredient()
+        {
+            if (_isFinished) return;
+            if  (_ingredient == null) throw new Exception("Already taking ingredient");
+            _state.IsFinished = true;
+            PotCountDownStop();
+            _state.TotalDelayTime += Math.Abs(Duration - _ingredient.CookTime);
+            Debug.Log("Take" + _ingredient.name + " 偏差" + Math.Abs(Duration - _ingredient.CookTime));
+            StartCoroutine(Co_ChainTakeIngredientProcess());
+        }
+
         public void TakeIngredient()
         {
             if (_isFinished) return;
@@ -137,7 +149,23 @@ namespace Script.Core.Pots
             _state.EndTime = Time.time;
         }
         
-        
+        // ReSharper disable Unity.PerformanceAnalysis
+        private IEnumerator Co_ChainTakeIngredientProcess()
+        {
+            AnimationClip clip = potType.takeIngredientAnimation;
+            PlayTakeIngredientAnimation();
+            ShowIngredient();
+            TakeIngredientEvent?.Invoke();
+            SaveIngredientEvent?.Invoke(_ingredient);
+
+            if (clip)
+            {
+                yield return new WaitForSeconds(clip.length + 1);
+            }
+            Debug.Log(clip.name);
+            AfterTakeIngredientEvent?.Invoke();
+            _state.Ingredient = null;
+        }
 
         // ReSharper disable Unity.PerformanceAnalysis
         private IEnumerator Co_TakeIngredientProcess()
@@ -146,6 +174,7 @@ namespace Script.Core.Pots
             PlayTakeIngredientAnimation();
             ShowIngredient();
             TakeIngredientEvent?.Invoke();
+            UseManaEvent?.Invoke();
             SaveIngredientEvent?.Invoke(_ingredient);
 
             if (clip)
@@ -177,9 +206,33 @@ namespace Script.Core.Pots
 
         public void AddPot(PotType potType)
         {
+            if (potType == null)
+            {
+                Debug.LogError($"[{nameof(Pot)}] 傳入的 potType 為 null！", this);
+                return;
+            }
+
+            // 2. 檢查 UI Image 元件是否存在
+            if (potImage == null)
+            {
+                Debug.LogError($"[{nameof(Pot)}] potImage 未在 Inspector 指派！GameObject: {gameObject.name}", this);
+                return;
+            }
+
             this.potType = potType;
-            potImage.sprite = potType.potSprite;
-            potImage.enabled = true;
+
+            // 3. 賦值 Sprite 並啟用
+            if (potType.potSprite != null)
+            {
+                potImage.sprite = potType.potSprite;
+                potImage.enabled = true;
+            }
+            else
+            {
+                Debug.LogWarning($"[{nameof(Pot)}] {potType.name} 的 potSprite 尚未設定！", this);
+                potImage.enabled = false;
+            }
+
             PlayInitAnimation();
         }
         
@@ -226,7 +279,7 @@ namespace Script.Core.Pots
 
         private void ShowIngredient()
         {
-            _ingredient.ResultSprite = Math.Abs(Duration - _ingredient.CookTime) < 0.5f ? _ingredient.CookedGoodSprite : _ingredient.CookedBadSprite;
+            _ingredient.IsCookedGood = Math.Abs(Duration - _ingredient.CookTime) < 0.5f;
             ingredientImage.sprite = _ingredient.ResultSprite;
             ingredientImage.gameObject.SetActive(true);
             ingredientImage.enabled = true;
@@ -251,6 +304,11 @@ namespace Script.Core.Pots
             seq.Append(ingredientImage.DOFade(1f, 0.3f).From(0f));
             seq.AppendInterval(0.4f); 
             seq.Append(ingredientImage.DOFade(0f, 0.3f));
+        }
+
+        public void ChainFinish()
+        {
+            ChainTakeIngredient();
         }
     }
 }

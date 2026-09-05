@@ -22,6 +22,8 @@ namespace Script.Core.Audio
     
     [Header("Audio Clips")]
     [SerializeField] private AudioClip magicBGMClip;
+    [SerializeField] private AudioClip goodEndBGMClip;
+    [SerializeField] private AudioClip badEndBGMClip;
 
     private float _defaultFadeDuration = 0.5f;
     private Dictionary<AudioClip, AudioSource> _sourceDict;
@@ -44,7 +46,18 @@ namespace Script.Core.Audio
     public void PlayBGM(AudioClip clip, bool loop = true, float fadeDuration = 0.5f)
     {
         if (clip == null) return;
+        
+        bgmSource.DOKill();
 
+        // 2. 如果 fadeDuration 為 0，直接暴力切換，不要依賴 OnComplete 排程
+        if (fadeDuration <= 0f)
+        {
+            bgmSource.volume = 1f;
+            bgmSource.clip = clip;
+            bgmSource.loop = loop;
+            bgmSource.Play();
+            return;
+        }
         if (bgmSource.isPlaying)
         {
             // 如果已有 BGM 正在播，做平滑切換 (Crossfade)
@@ -68,11 +81,34 @@ namespace Script.Core.Audio
     
     public void PlayMagicBGM()
     {
-        PlayBGM(magicBGMClip, false);
         foreach (KeyValuePair<AudioClip, AudioSource> kvp in _sourceDict)
         {
+            kvp.Value.DOKill();
             kvp.Value.DOFade(0f, 0.1f);
         }
+        PlayBGM(magicBGMClip, false, 0f);
+    }
+    
+    public void PlayGoodEndBGM()
+    {
+        foreach (KeyValuePair<AudioClip, AudioSource> kvp in _sourceDict)
+        {
+            kvp.Value.DOKill();
+            kvp.Value.DOFade(0f, 0.1f);
+        }
+        Sequence seq = DOTween.Sequence();
+        seq.AppendInterval(1f);
+        seq.AppendCallback(() => PlayBGM(goodEndBGMClip, false, 0.3f));
+    }
+    
+    public void PlayBadEndBGM()
+    {
+        foreach (KeyValuePair<AudioClip, AudioSource> kvp in _sourceDict)
+        {
+            kvp.Value.DOKill();
+            kvp.Value.DOFade(0f, 0.1f);
+        }
+        PlayBGM(badEndBGMClip, true, 0.3f);
     }
 
     /// <summary>

@@ -1,128 +1,177 @@
 ﻿using System;
 using DG.Tweening;
+using Script.Core;
+using Script.Core.Crystals;
 using Script.Core.Ingredients;
 using Script.Tool.Timers;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 public class LevelClearAnimation : MonoBehaviour
 {
     public event Action OnCountDownStartEvent;
-    [SerializeField] private LayoutGroup tableLayoutGroup;
+
+    [SerializeField] private GameObject frontGround;
     
     [Header("材料們")]
-    [SerializeField] private RectTransform ingredients;
+    [SerializeField] private IngredientsHandler ingredientsHandler;
+
+    [SerializeField] private IngredientSlot[] ingredients;
+    [SerializeField] private Vector2 dropRangeStart;
+    [SerializeField] private Vector2 dropRangeEnd;
+    [SerializeField] private float dropDistance = 120f;
 
     [Header("小鍋子們")]
     [SerializeField] private RectTransform[] leftPots;  // 左半邊的鍋子
     [SerializeField] private RectTransform[] rightPots; // 右半邊的鍋子
     [SerializeField] private float exitDistance = 1200f; // 移出螢幕的距離
-
-    [Header("超大鍋子")]
-    [SerializeField] private RectTransform giantPotRect;
-    [SerializeField] private TMP_Text countDownText;
-    [SerializeField] private Vector2 giantPotTargetPos;
     
-    [Header("成品")]
-    [SerializeField] private RectTransform dishRect;
-    [SerializeField] private Vector2 dishPotTargetPos;
-    
+    [Header("Player")]
+    [SerializeField] private Player player;
+    [SerializeField] private RectTransform playerRect;
+    [SerializeField] private Vector2 playerFrom;
+    [SerializeField] private Vector2 playerTo;
     private CountdownTimer _timer;
     public float startTime;
     
+    [Header("超大鍋子")]
+    [SerializeField] private GameObject bigPotScene;
+    
+    [SerializeField] private RectTransform bigPotRect;
+    [SerializeField] private Vector2 bigPotFrom;
+    [SerializeField] private Vector2 bigPotTo;
+    [SerializeField] private float bigPotMoveDuration = 0.5f;
+    
+    [SerializeField] private RectTransform bigPotTopRect;
+    [SerializeField] private Vector2 bigPotTopFrom;
+    [SerializeField] private Vector2 bigPotTopTo;
+    
+    [Header("Timer")]
+    [SerializeField] private NumberShower countDownText;
+    
     private void Start()
     {
-        // 預設將超大鍋子隱藏/縮小/移到螢幕下方準備
-        if (giantPotRect != null)
+        if (bigPotScene != null) 
         {
-            giantPotRect.localScale = Vector3.zero;
-            giantPotRect.gameObject.SetActive(false);
+            bigPotScene.SetActive(false);
+        }
+        if (bigPotRect != null)
+        {
+            bigPotRect.gameObject.SetActive(false);
         }
         if (countDownText != null)
         {
             countDownText.gameObject.SetActive(false);
         }
-        _timer = new CountdownTimer(5f);
-        _timer.OnStop += OnCountdownComplete;
+
+        foreach (var ingredient in ingredients)
+        {
+            ingredient.gameObject.SetActive(false);
+        }
+    }
+
+    private void OnEnable()
+    {
+        OnCountDownStartEvent += player.PlayMagicAnimation;
+    }
+
+    private void OnDisable()
+    {
+        OnCountDownStartEvent -= player.PlayMagicAnimation;
+    }
+    
+    public void PlayClearSequence()
+    {
+        SetupBigPotScene();
         
-        if (dishRect != null)
-        {
-            dishRect.gameObject.SetActive(false);
-            dishRect.localScale = Vector3.zero;
-            dishRect.anchoredPosition = dishPotTargetPos + new Vector2(0f, -500f);
-        }
-    }
-
-    public void OnCountdownComplete()
-    {
-        if (!dishRect) return;
-
-        dishRect.gameObject.SetActive(true);
-        countDownText.text = "0";
-    }
-
-    public void JumpOutDish()
-    {
-        Sequence seq = DOTween.Sequence();
-        seq.Append(dishRect.DOAnchorPos(dishPotTargetPos, 0.8f).SetEase(Ease.OutCubic));
-        seq.Join(dishRect.DOScale(Vector3.one, 0.8f).SetEase(Ease.OutBack));
-    }
-
-    /// <summary>
-    /// 觸發通關動畫
-    /// </summary>
-    public void PlayClearSequence(Action callback)
-    {
-        if (tableLayoutGroup != null)
-        {
-            tableLayoutGroup.enabled = false; 
-        }
-        // 建立 DOTween 序列
         Sequence sequence = DOTween.Sequence();
-
-        // ----------------------------------------------------
-        // 步驟 1：桌子對齊底部 & 鍋子左右飛出 (同時進行 Join)
-        // ----------------------------------------------------
+        AppendLittlePotsFlyOut(sequence);
         
-        // 1. 桌子往下移
-        // sequence.Append(tableRect.DOAnchorPos(tableTargetPos, 0.6f).SetEase(Ease.OutCubic));
+        JoinIngredientsFlyOut(sequence);
+        
+        AppendPlayerMoveRight(sequence);
+        
+        JoinBigPotFlyIn(sequence);
 
-        // 2. 左邊鍋子往左移出
-        foreach (var pot in leftPots)
+        AppendIngredientsFlyIn(sequence);
+        
+        AppendBigPotTopFlyIn(sequence);
+        
+        AppendStartCountDown(sequence);
+    }
+
+    private void SetupBigPotScene()
+    {
+        if (bigPotScene != null)
         {
-            if (pot == null || !pot.gameObject.activeSelf) continue;
+            bigPotScene.SetActive(true); 
+        }
+
+        if (bigPotRect != null)
+        {
+            bigPotRect.gameObject.SetActive(true);
+            bigPotRect.anchoredPosition = bigPotFrom;
+        }
+        
+        if (bigPotTopRect != null)
+        {
+            bigPotTopRect.gameObject.SetActive(true);
+            bigPotTopRect.anchoredPosition = bigPotTopFrom;
+        }
+
+        for (int i = 0; i <  ingredientsHandler.activeSlotsAmount; i++)
+        {
+            var randomPoint = GetRandomPointBetween(dropRangeStart, dropRangeEnd);
+            ingredients[i].RectTransform.anchoredPosition = new Vector2(randomPoint.x, randomPoint.y + dropDistance);
+            ingredients[i].gameObject.SetActive(true);
+        }
+    }
+
+    private void AppendPlayerMoveRight(Sequence sequence)
+    {
+        sequence.Append(playerRect.DOAnchorPos(playerTo, 0.5f).SetEase(Ease.OutQuad));
+    }
+
+    private void AppendBigPotTopFlyIn(Sequence sequence)
+    {
+        sequence.Append(bigPotTopRect.DOAnchorPos(bigPotTopTo, 0.5f).SetEase(Ease.OutQuad));
+    }
+
+    private void AppendIngredientsFlyIn(Sequence sequence)
+    {
+        float interval = 0.1f;
+        float duration = sequence.Duration();
+        
+        int index = 0;
+        foreach (var ingredientSlotIdx in ingredientsHandler.ActiveSlots)
+        {
+            ingredients[index].SetIngredient(ingredientsHandler.GetIngredient(ingredientSlotIdx));
+            ingredients[index].SetCookedImage();
+    
+            sequence.Insert(duration + index * interval, ingredients[index].RectTransform.DOAnchorPosY(-dropDistance, 0.7f).SetEase(Ease.OutQuad));
+            index++;
+        }
+    }
+
+    private void JoinIngredientsFlyOut(Sequence sequence)
+    {
+        foreach (var ingredientSlotIdx in ingredientsHandler.ActiveSlots)
+        {
+            var ingredient = ingredientsHandler.GetIngredientSlot(ingredientSlotIdx);
             
-            sequence.Join(pot.DOAnchorPosX(pot.anchoredPosition.x - exitDistance, 0.5f)
-               .SetEase(Ease.InCubic));
+            sequence.Join(ingredient.RectTransform.DOAnchorPos(ingredient.RectTransform.anchoredPosition + new Vector2(0, 150), 0.5f).SetEase(Ease.InQuad));
         }
 
-        // 3. 右邊鍋子往右移出
-        foreach (var pot in rightPots)
+        sequence.AppendCallback(() =>
         {
-            if (pot == null || !pot.gameObject.activeSelf) continue;
-
-            sequence.Join(pot.DOAnchorPosX(pot.anchoredPosition.x + exitDistance, 0.5f)
-               .SetEase(Ease.InCubic));
-        }
-        
-        sequence.Join(ingredients.DOAnchorPosY(ingredients.anchoredPosition.y - exitDistance, 0.5f)
-            .SetEase(Ease.InCubic));
-
-        // ----------------------------------------------------
-        // 步驟 2：出現超大鍋子 (Append 銜接在移出之後)
-        // ----------------------------------------------------
-        sequence.AppendCallback(() => 
-        {
-            if (giantPotRect != null) giantPotRect.gameObject.SetActive(true);
+            frontGround.SetActive(true);
         });
+    }
 
-        // 效果：從 0 彈跳放大出現 (Ease.OutBack)
-        sequence.Append(giantPotRect.DOScale(Vector3.one, 0.6f).SetEase(Ease.OutBack));
-        sequence.Append(countDownText.rectTransform.DOScale(Vector3.one, 0.05f).SetEase(Ease.OutBack));
-        
-        // 如果想同時從下方升起：
-        // sequence.Join(giantPotRect.DOAnchorPos(giantPotTargetPos, 0.6f).SetEase(Ease.OutBack));
+    private void AppendStartCountDown(Sequence sequence)
+    {
+        _timer = new CountdownTimer(6f);
         sequence.AppendCallback(() => 
         {
             _timer.Start();
@@ -130,35 +179,72 @@ public class LevelClearAnimation : MonoBehaviour
             if (countDownText != null) countDownText.gameObject.SetActive(true);
             OnCountDownStartEvent?.Invoke();
         });
-        // 動態結束時的回呼
-        sequence.OnComplete(() => 
-        {
-            callback?.Invoke();
-        });
     }
+
+    private void JoinBigPotFlyIn(Sequence sequence)
+    {
+        sequence.Join(bigPotRect.DOAnchorPos(bigPotTo, bigPotMoveDuration).SetEase(Ease.OutBounce));
+    }
+
+    private void AppendLittlePotsFlyOut(Sequence sequence)
+    {
+        foreach (var pot in leftPots)
+        {
+            if (pot == null || !pot.gameObject.activeSelf) continue;
+            
+            sequence.Join(pot.DOAnchorPosX(pot.anchoredPosition.x - exitDistance, 0.5f)
+                .SetEase(Ease.InCubic));
+        }
+
+        foreach (var pot in rightPots)
+        {
+            if (pot == null || !pot.gameObject.activeSelf) continue;
+
+            sequence.Join(pot.DOAnchorPosX(pot.anchoredPosition.x + exitDistance, 0.5f)
+                .SetEase(Ease.InCubic));
+        }
+    }
+
     private int _lastDisplayedSecond = -1;
     private void Update()
     {
-        // 取出當前剩餘的整數秒數 (例如 29.8 秒 -> 29 秒)
         if (_timer != null && _timer.IsRunning)
         {
             UpdateCountdownUI();
         }
     }
+    private void FixedUpdate()
+    {
+        if (_timer is { IsRunning: true }) _timer.Tick(Time.fixedDeltaTime);
+    }
     
     private void UpdateCountdownUI(bool forceUpdate = false)
     {
-        int currentSecond = Mathf.CeilToInt(_timer.Time);
+        // 使用 FloorToInt 並用 +0.99f 讓 5.0~4.01 秒都穩穩顯示 5
+        // 或是直接 FloorToInt(_timer.Time + 0.01f) 防浮點數誤差
+        int currentSecond = Mathf.Clamp(Mathf.FloorToInt(_timer.Time + 0.001f), 0, (int)5);
 
         if (forceUpdate || currentSecond != _lastDisplayedSecond)
         {
             _lastDisplayedSecond = currentSecond;
-            countDownText.text = currentSecond.ToString();
+            countDownText.ShowNumber(currentSecond);
         }
     }
-
-    private void FixedUpdate()
+    
+    public Vector2 GetRandomPointBetween(Vector2 a, Vector2 b)
     {
-        if (_timer.IsRunning) _timer.Tick(Time.fixedDeltaTime);
+        // Random.value 會精準回傳一個 0.0f ~ 1.0f 之間的隨機浮點數
+        float randomT = Random.value; 
+
+        // 進行插值運算
+        return Vector2.Lerp(a, b, randomT);
     }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        
+        Gizmos.DrawLine(dropRangeStart, dropRangeEnd);
+    }
+
 }

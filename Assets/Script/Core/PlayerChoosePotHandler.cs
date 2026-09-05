@@ -4,7 +4,6 @@ using Script.Core.Audio;
 using Script.Core.Ingredients;
 using Script.Core.Pots;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Script.Core
 {
@@ -20,7 +19,8 @@ namespace Script.Core
         private void OnEnable()
         {
             player.PotChosenEvent += OnPotChosen;
-            potHandler.PutIngredientEvent += ingredientHandler.ClearSlot;
+            potHandler.PutIngredientEvent += ingredientHandler.ClearSlotImage;
+            potHandler.TakeIngredientEvent += ingredientHandler.SetCookedImage;
             potHandler.PutIngredientEvent += PlayPotCookingBGM;
             _cachedPotDelegates.Clear();
 
@@ -33,13 +33,15 @@ namespace Script.Core
                 potHandler.pots[i].PotChosenEvent += potAction;
                 potHandler.pots[i].TakeIngredientEvent += potHandler.OnOneTakeIngredient;
                 potHandler.pots[i].AfterTakeIngredientEvent += potHandler.AfterOneTakeIngredient;
+                potHandler.pots[i].UseManaEvent += potHandler.OnUseMana;
             }
         }
 
         private void OnDisable()
         {
             player.PotChosenEvent -= OnPotChosen;
-            potHandler.PutIngredientEvent -= ingredientHandler.ClearSlot;
+            potHandler.PutIngredientEvent -= ingredientHandler.ClearSlotImage;
+            potHandler.TakeIngredientEvent -= ingredientHandler.SetCookedImage;
             potHandler.PutIngredientEvent -= PlayPotCookingBGM;
             for (int i = 0; i < potHandler.pots.Length; i++)
             {
@@ -48,6 +50,7 @@ namespace Script.Core
                     potHandler.pots[i].PotChosenEvent -= _cachedPotDelegates[i];
                     potHandler.pots[i].TakeIngredientEvent -= potHandler.OnOneTakeIngredient;
                     potHandler.pots[i].AfterTakeIngredientEvent -= potHandler.AfterOneTakeIngredient;
+                    potHandler.pots[i].UseManaEvent -= potHandler.OnUseMana;
                 }
             }
             _cachedPotDelegates.Clear();
@@ -55,11 +58,13 @@ namespace Script.Core
 
         private void OnPotChosen(int idx)
         {
+            if (GameState.Instance.IsFinished) return;
             potHandler.OnPotChosen(idx, ingredientHandler.GetIngredient(idx));
         }
 
         private void PlayPotCookingBGM(int idx)
         {
+            if (GameState.Instance.IsFinished) return;
             audioHandler.AddPotAccompaniment(potHandler.pots[idx].potType.soundClip);
         }
         

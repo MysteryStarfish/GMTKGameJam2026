@@ -1,16 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 namespace Script.Core.Ingredients
 {
     public class IngredientsHandler : MonoBehaviour
     {
         [SerializeField] private IngredientSlot[] ingredientSlots;
-        private int activeSlotsAmount;
-        
-        List<int> ActiveSlots;
+        public int activeSlotsAmount;
+
+        public List<int> ActiveSlots;
         List<Ingredient> _ingredients;
+
+        public Ingredient Ingredient (int idx) => _ingredients[idx];
 
         private bool IsActivate(int idx)
         {
@@ -83,10 +87,21 @@ namespace Script.Core.Ingredients
             return ingredientSlots[idx].GetIngredient();
         }
         
-        public void ClearSlot(int idx)
+        public IngredientSlot GetIngredientSlot(int idx)
+        {
+            if (idx < 0 || idx >= ingredientSlots.Length) return null;
+            return ingredientSlots[idx];
+        }
+        
+        public void ClearSlotImage(int idx)
         {
             if (idx < 0 || idx >= ingredientSlots.Length) return;
-            ingredientSlots[idx].ClearSlot();
+            ingredientSlots[idx].ClearSlotImage();
+        }
+
+        public void SetCookedImage(int idx)
+        {
+            ingredientSlots[idx].SetCookedImage();
         }
     }
 }
